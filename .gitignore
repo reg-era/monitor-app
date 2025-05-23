@@ -1,0 +1,7 @@
+monitor-app
+
+*Make*
+*make*
+!CMakeLists.txt
+
+*.ini

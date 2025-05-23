@@ -1,7 +1,9 @@
 #include "header.h"
 
+
 // get cpu id and information, you can use `proc/cpuinfo`
-string CPUinfo()
+string
+CPUinfo()
 {
     char CPUBrandString[0x40];
     unsigned int CPUInfo[4] = {0, 0, 0, 0};

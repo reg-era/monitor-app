@@ -1,24 +1,6 @@
-#include "header.h"
+#include "../../include/header.h"
 #include <SDL.h>
 
-/*
-NOTE : You are free to change the code as you wish, the main objective is to make the
-       application work and pass the audit.
-
-       It will be provided the main function with the following functions :
-
-       - `void systemWindow(const char *id, ImVec2 size, ImVec2 position)`
-            This function will draw the system window on your screen
-       - `void memoryProcessesWindow(const char *id, ImVec2 size, ImVec2 position)`
-            This function will draw the memory and processes window on your screen
-       - `void networkWindow(const char *id, ImVec2 size, ImVec2 position)`
-            This function will draw the network window on your screen
-*/
-
-// About Desktop OpenGL function loaders:
-//  Modern desktop OpenGL doesn't have a standard portable header file to load OpenGL function pointers.
-//  Helper libraries are often used for this purpose! Here we are supporting a few common ones (gl3w, glew, glad).
-//  You may use another loader/header of your choice (glext, glLoadGen, etc.), or chose to manually implement your own.
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
 #include <GL/gl3w.h> // Initialize with gl3wInit()
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLEW)
@@ -120,7 +102,8 @@ int main(int, char **)
     glbinding::Binding::initialize();
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLBINDING3)
     bool err = false;
-    glbinding::initialize([](const char *name) { return (glbinding::ProcAddress)SDL_GL_GetProcAddress(name); });
+    glbinding::initialize([](const char *name)
+                          { return (glbinding::ProcAddress)SDL_GL_GetProcAddress(name); });
 #else
     bool err = false; // If you use IMGUI_IMPL_OPENGL_LOADER_CUSTOM, your loader is likely to requires some form of initialization.
 #endif
@@ -171,20 +154,18 @@ int main(int, char **)
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
 
-        {
-            ImVec2 mainDisplay = io.DisplaySize;
-            memoryProcessesWindow("== Memory and Processes ==",
-                                  ImVec2((mainDisplay.x / 2) - 20, (mainDisplay.y / 2) + 30),
-                                  ImVec2((mainDisplay.x / 2) + 10, 10));
-            // --------------------------------------
-            systemWindow("== System ==",
-                         ImVec2((mainDisplay.x / 2) - 10, (mainDisplay.y / 2) + 30),
-                         ImVec2(10, 10));
-            // --------------------------------------
-            networkWindow("== Network ==",
-                          ImVec2(mainDisplay.x - 20, (mainDisplay.y / 2) - 60),
-                          ImVec2(10, (mainDisplay.y / 2) + 50));
-        }
+        ImVec2 mainDisplay = io.DisplaySize;
+        memoryProcessesWindow("== Memory and Processes ==",
+                              ImVec2((mainDisplay.x / 2) - 20, (mainDisplay.y / 2) + 30),
+                              ImVec2((mainDisplay.x / 2) + 10, 10));
+        // --------------------------------------
+        systemWindow("== System ==",
+                     ImVec2((mainDisplay.x / 2) - 10, (mainDisplay.y / 2) + 30),
+                     ImVec2(10, 10));
+        // --------------------------------------
+        networkWindow("== Network ==",
+                      ImVec2(mainDisplay.x - 20, (mainDisplay.y / 2) - 60),
+                      ImVec2(10, (mainDisplay.y / 2) + 50));
 
         // Rendering
         ImGui::Render();
