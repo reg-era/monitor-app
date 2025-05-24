@@ -1,7 +1,6 @@
-#include "../../include/header.h"
-#include "../models/cpu.cpp"
+#include "../../include/prepare.h"
 
-int SectionWindows(int section, CPU *cpu)
+int SectionWindows(int section, CPU cpu, Memory mem)
 {
     ImVec2 windowSize = ImGui::GetIO().DisplaySize;
 
@@ -19,19 +18,19 @@ int SectionWindows(int section, CPU *cpu)
     {
     case 1:
     {
-        ImGui::Text("User: %s", cpu->sysInfo.UserName.c_str());
-        ImGui::Text("Host: %s", cpu->sysInfo.HostName.c_str());
-        ImGui::Text("CPU Name: %s", cpu->sysInfo.CpuName.c_str());
-        ImGui::Text("CPU Type: %s", cpu->sysInfo.CpuType.c_str());
+        ImGui::Text("User: %s", cpu.sysInfo.UserName.c_str());
+        ImGui::Text("Host: %s", cpu.sysInfo.HostName.c_str());
+        ImGui::Text("CPU Name: %s", cpu.sysInfo.CpuName.c_str());
+        ImGui::Text("CPU Type: %s", cpu.sysInfo.CpuType.c_str());
 
         std::string coresUsage;
         char buffer[64];
 
-        cpu->update(ImGui::GetTime());
+        cpu.update(ImGui::GetTime());
 
-        for (int i = 0; i < cpu->getCoreCount(); ++i)
+        for (int i = 0; i < cpu.getCoreCount(); ++i)
         {
-            std::sprintf(buffer, "Core %d: %.2f%%\t", i, cpu->getCoreUsage(i));
+            std::sprintf(buffer, "Core %d: %.2f%%\t", i, cpu.getCoreUsage(i));
             coresUsage += buffer;
         }
 
@@ -40,6 +39,15 @@ int SectionWindows(int section, CPU *cpu)
     }
     case 2:
         ImGui::Text("Displaying Memory information...");
+
+        ImGui::Text("RAM Usage: %.2f GB / %.2f GB", mem.usedRAM / 1024.0 / 1024.0, mem.totalRAM / 1024.0 / 1024.0);
+        ImGui::ProgressBar((float)mem.usedRAM / mem.totalRAM, ImVec2(-1, 0));
+
+        ImGui::Text("Swap Usage: %.2f GB / %.2f GB", mem.usedSwap / 1024.0 / 1024.0, mem.totalSwap / 1024.0 / 1024.0);
+        ImGui::ProgressBar(mem.totalSwap > 0 ? (float)mem.usedSwap / mem.totalSwap : 0.f, ImVec2(-1, 0));
+
+        ImGui::Text("Disk Usage (on wiiiw): %.2f GB / %.2f GB", mem.usedDisk / 1024.0 / 1024.0 / 1024.0, mem.totalDisk / 1024.0 / 1024.0 / 1024.0);
+        ImGui::ProgressBar(mem.totalDisk > 0 ? (float)mem.usedDisk / mem.totalDisk : 0.f, ImVec2(-1, 0));
         break;
     case 3:
         ImGui::Text("Displaying Network information...");

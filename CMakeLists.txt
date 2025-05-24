@@ -35,6 +35,10 @@ include_directories(
 
 add_executable(monitor-app
     src/main.cpp
+    src/gui/navigation.cpp
+    src/gui/section.cpp
+    src/models/cpu.cpp
+    src/models/memory.cpp
     ${IMGUI_SOURCES}
 )
 

@@ -34,13 +34,6 @@
 #include <arpa/inet.h>
 #include <map>
 
-
 using namespace std;
 
-#include "../src/gui/navigation.cpp"
-#include "../src/gui/section.cpp"
-
-// #include "../src/models/cpu.cpp"
-
 #endif
-

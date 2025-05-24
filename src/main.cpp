@@ -1,5 +1,8 @@
-#include "../../include/header.h"
 #include <SDL.h>
+
+#include "../../include/prepare.h"
+#include "../../include/cpu.h"
+#include "../../include/memory.h"
 
 // OpenGL loader selection
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
@@ -88,6 +91,7 @@ int main(int, char **)
     ImVec4 clear_color = ImVec4(255.f, 255.f, 255.f, 255.f);
 
     static CPU cpu(ImGui::GetTime());
+    static Memory memo(ImGui::GetTime());
 
     // Main application loop
     bool done = false;
@@ -113,7 +117,7 @@ int main(int, char **)
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
 
-        SectionWindows(HeaderNavigation(io.DisplaySize), &cpu);
+        SectionWindows(HeaderNavigation(io.DisplaySize), cpu, memo);
 
         // Render the frame
         ImGui::Render();
