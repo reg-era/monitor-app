@@ -33,75 +33,11 @@
 #include <arpa/inet.h>
 #include <map>
 
+
 using namespace std;
 
-struct CPUStats
-{
-    long long int user;
-    long long int nice;
-    long long int system;
-    long long int idle;
-    long long int iowait;
-    long long int irq;
-    long long int softirq;
-    long long int steal;
-    long long int guest;
-    long long int guestNice;
-};
-
-// processes `stat`
-struct Proc
-{
-    int pid;
-    string name;
-    char state;
-    long long int vsize;
-    long long int rss;
-    long long int utime;
-    long long int stime;
-};
-
-struct IP4
-{
-    char *name;
-    char addressBuffer[INET_ADDRSTRLEN];
-};
-
-struct Networks
-{
-    vector<IP4> ip4s;
-};
-
-struct TX
-{
-    int bytes;
-    int packets;
-    int errs;
-    int drop;
-    int fifo;
-    int frame;
-    int compressed;
-    int multicast;
-};
-
-struct RX
-{
-    int bytes;
-    int packets;
-    int errs;
-    int drop;
-    int fifo;
-    int colls;
-    int carrier;
-    int compressed;
-};
-
-// student TODO : system stats
-string CPUinfo();
-const char *getOsName();
-
-// student TODO : memory and processes
-
-// student TODO : network
+#include "../src/gui/navigation.cpp"
+#include "../src/gui/section.cpp"
 
 #endif
+

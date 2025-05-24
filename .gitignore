@@ -1,5 +1,7 @@
 monitor-app
 
+build
+
 *Make*
 *make*
 !CMakeLists.txt
