@@ -87,6 +87,8 @@ int main(int, char **)
     // Background color
     ImVec4 clear_color = ImVec4(255.f, 255.f, 255.f, 255.f);
 
+    static CPU cpu(ImGui::GetTime());
+
     // Main application loop
     bool done = false;
     while (!done)
@@ -111,8 +113,7 @@ int main(int, char **)
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
 
-        int section = HeaderNavigation(io.DisplaySize);
-        SectionWindows(section);
+        SectionWindows(HeaderNavigation(io.DisplaySize), &cpu);
 
         // Render the frame
         ImGui::Render();

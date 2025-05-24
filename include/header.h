@@ -12,6 +12,7 @@
 #include <cmath>
 // lib to read from file
 #include <fstream>
+#include <sstream>
 // for the name of the computer and the logged in user
 #include <unistd.h>
 #include <limits.h>
@@ -38,6 +39,8 @@ using namespace std;
 
 #include "../src/gui/navigation.cpp"
 #include "../src/gui/section.cpp"
+
+// #include "../src/models/cpu.cpp"
 
 #endif
 
