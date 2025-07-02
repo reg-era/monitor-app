@@ -1,10 +1,6 @@
-monitor-app
-
 .vscode
-build
 
-*Make*
-*make*
-!CMakeLists.txt
+bin
+build
 
 *.ini

@@ -1,6 +1,6 @@
 #include "../../include/prepare.h"
 
-int SectionWindows(int section, CPU cpu, Memory mem)
+int SectionWindows(int section, CPU cpu, Memory mem, Process &proc)
 {
     ImVec2 windowSize = ImGui::GetIO().DisplaySize;
 
@@ -35,6 +35,52 @@ int SectionWindows(int section, CPU cpu, Memory mem)
         }
 
         ImGui::TextUnformatted(coresUsage.c_str());
+
+        // auto thermal = cpu.getThermalInfo();
+        // auto fan = cpu.getFanInfo();
+
+        // ImGui::Text("CPU Temp: %.1f °C", thermal.temperatureC);
+        // if (fan.active)
+        // {
+        //     ImGui::Text("Fan Speed: %d RPM", fan.speedRPM);
+        //     ImGui::Text("Fan Level: %d", fan.level);
+        // }
+        // else
+        // {
+        //     ImGui::Text("Fan: Not available");
+        // }
+
+        // **Process Table**
+        proc.Update(); // Make sure data is fresh
+
+        auto topProcs = proc.GetTopProcesses(100); // top 10 processes
+
+        if (ImGui::BeginTable("ProcessTable", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+        {
+            ImGui::TableSetupColumn("PID", ImGuiTableColumnFlags_WidthFixed, 60.0f);
+            ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthStretch);
+            ImGui::TableSetupColumn("CPU %", ImGuiTableColumnFlags_WidthFixed, 80.0f);
+            ImGui::TableSetupColumn("RSS (KB)", ImGuiTableColumnFlags_WidthFixed, 80.0f);
+            ImGui::TableHeadersRow();
+
+            for (const auto &p : topProcs)
+            {
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
+                ImGui::Text("%d", p.pid);
+
+                ImGui::TableSetColumnIndex(1);
+                ImGui::TextUnformatted(p.name.c_str());
+
+                ImGui::TableSetColumnIndex(2);
+                ImGui::Text("%.2f", p.cpuUsage);
+
+                ImGui::TableSetColumnIndex(3);
+                ImGui::Text("%ld", p.rss * (sysconf(_SC_PAGESIZE) / 1024)); // RSS in KB
+            }
+            ImGui::EndTable();
+        }
+
         break;
     }
     case 2:

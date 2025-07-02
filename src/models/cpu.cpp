@@ -115,3 +115,42 @@ void CPU::LoadSystemInfo()
 
     sysInfo = info;
 }
+
+// void CPU::UpdateThermalAndFan()
+// { // Thermal check
+    // std::ifstream tempFile("/sys/class/thermal/thermal_zone0/temp");
+    // if (tempFile.is_open())
+    // {
+        // int tempMilliC = 0;
+        // tempFile >> tempMilliC;
+        // thermal.temperatureC = tempMilliC / 1000.0f;
+    // }
+    // else
+    // {
+        // thermal.temperatureC = 0.0f; // fallback to safe value
+    // }
+// 
+    // Fan check
+    // fan.active = false; // default to false
+    // for (int i = 0; i < 5; ++i)
+    // {
+        // std::string base = "/sys/class/hwmon/hwmon" + std::to_string(i);
+        // std::ifstream fanFile(base + "/fan1_input");
+        // if (fanFile.is_open())
+        // {
+            // fan.active = true;
+            // fanFile >> fan.speedRPM;
+// 
+            // if (fan.speedRPM > 3000)
+                // fan.level = 3;
+            // else if (fan.speedRPM > 1500)
+                // fan.level = 2;
+            // else if (fan.speedRPM > 500)
+                // fan.level = 1;
+            // else
+                // fan.level = 0;
+// 
+            // break;
+        // }
+    // }
+// }

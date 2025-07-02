@@ -18,6 +18,18 @@ struct SystemInfo
     std::string CpuType;
 };
 
+// struct ThermalInfo
+// {
+    // float temperatureC = 0.0f; // in Celsius
+// };
+// 
+// struct FanInfo
+// {
+    // bool active = false;
+    // int speedRPM = 0; // Fan speed in RPM
+    // int level = 0;    // Optional: custom mapped level (e.g., 1–3)
+// };
+
 class CPU
 {
 private:
@@ -26,15 +38,24 @@ private:
     double frameTime;
     double updateInterval;
 
+    // ThermalInfo thermal; // <-- These were missing
+    // FanInfo fan;         // <-- These were missing
+
 public:
     SystemInfo sysInfo;
 
     CPU(double time);
 
     void update(double time);
+    void LoadSystemInfo();
+    // void UpdateThermalAndFan(); // <-- Add this
+
     int getCoreCount() const;
     float getCoreUsage(int index) const;
     const std::vector<CpuCore> &getCores() const;
-    void LoadSystemInfo();
+
+    // Accessors
+    // ThermalInfo getThermalInfo() const { return thermal; }
+    // FanInfo getFanInfo() const { return fan; }
 };
 #endif

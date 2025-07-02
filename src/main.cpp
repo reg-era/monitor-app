@@ -1,8 +1,9 @@
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include "../../include/prepare.h"
 #include "../../include/cpu.h"
 #include "../../include/memory.h"
+#include "../../include/process.h"
 
 // OpenGL loader selection
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
@@ -92,6 +93,7 @@ int main(int, char **)
 
     static CPU cpu(ImGui::GetTime());
     static Memory memo(ImGui::GetTime());
+    static Process procMonitor;
 
     // Main application loop
     bool done = false;
@@ -117,7 +119,7 @@ int main(int, char **)
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
 
-        SectionWindows(HeaderNavigation(io.DisplaySize), cpu, memo);
+        SectionWindows(HeaderNavigation(io.DisplaySize), cpu, memo,procMonitor);
 
         // Render the frame
         ImGui::Render();
