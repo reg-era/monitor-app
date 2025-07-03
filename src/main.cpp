@@ -1,9 +1,7 @@
 #include <SDL2/SDL.h>
 
-#include "../../include/prepare.h"
-#include "../../include/cpu.h"
-#include "../../include/memory.h"
-#include "../../include/process.h"
+#include "../../include/header.h"
+#include "../../include/graphic_ui.h"
 
 // OpenGL loader selection
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
@@ -91,21 +89,15 @@ int main(int, char **)
     // Background color
     ImVec4 clear_color = ImVec4(255.f, 255.f, 255.f, 255.f);
 
-    static CPU cpu(ImGui::GetTime());
-    static Memory memo(ImGui::GetTime());
-    static Process procMonitor;
-
     // Main application loop
     bool done = false;
     while (!done)
     {
-        // Poll events
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
             ImGui_ImplSDL2_ProcessEvent(&event);
-            if (
-                event.type == SDL_QUIT ||
+            if (event.type == SDL_QUIT ||
                 (event.type == SDL_WINDOWEVENT &&
                  event.window.event == SDL_WINDOWEVENT_CLOSE &&
                  event.window.windowID == SDL_GetWindowID(window)))
@@ -114,14 +106,41 @@ int main(int, char **)
             }
         }
 
-        // Start a new ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
 
-        SectionWindows(HeaderNavigation(io.DisplaySize), cpu, memo,procMonitor);
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(io.DisplaySize);
+        ImGui::Begin(
+            "Main Window",
+            nullptr,
+            ImGuiWindowFlags_NoTitleBar |
+                ImGuiWindowFlags_NoResize |
+                ImGuiWindowFlags_NoMove |
+                ImGuiWindowFlags_NoCollapse |
+                ImGuiWindowFlags_NoScrollbar |
+                ImGuiWindowFlags_NoScrollWithMouse |
+                ImGuiWindowFlags_NoBringToFrontOnFocus |
+                ImGuiWindowFlags_NoSavedSettings);
 
-        // Render the frame
+        ImVec2 avail = ImGui::GetContentRegionAvail();
+        float spacing = ImGui::GetStyle().ItemSpacing.y;
+
+        float idSection = avail.y * 0.30f;
+        float taskSection = avail.y * 0.30f;
+        float networkSection = avail.y * 0.19f;
+
+        // printf("%.2f %2.f\n", avail.x, spacing);
+
+        DrawHeaderSection(avail.x, idSection);
+        DrawMemorySection(avail.x, idSection);
+        DrawTaskSection(avail.x, taskSection);
+        DrawNetworkSection(avail.x, networkSection);
+
+        ImGui::End(); // End Main Window
+
+        // Render
         ImGui::Render();
         glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);

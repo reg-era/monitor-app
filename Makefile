@@ -14,11 +14,7 @@ INCLUDES = -Iimgui/lib -Iimgui/lib/backend -Iimgui/lib/gl3w -I/usr/include/SDL2
 
 # Source files
 SRC = src/main.cpp \
-      src/gui/navigation.cpp \
-      src/gui/section.cpp \
-      src/models/cpu.cpp \
-      src/models/process.cpp \
-      src/models/memory.cpp \
+      src/gui/all_gui.cpp \
       imgui/lib/imgui.cpp \
       imgui/lib/imgui_draw.cpp \
       imgui/lib/imgui_widgets.cpp \
@@ -56,6 +52,8 @@ build/%.o: %.c
 
 run:
 	./$(TARGET)
+
+test: all run
 
 clean:
 	rm -rf build bin
