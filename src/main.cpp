@@ -125,13 +125,10 @@ int main(int, char **)
                 ImGuiWindowFlags_NoSavedSettings);
 
         ImVec2 avail = ImGui::GetContentRegionAvail();
-        float spacing = ImGui::GetStyle().ItemSpacing.y;
 
-        float idSection = avail.y * 0.30f;
-        float taskSection = avail.y * 0.30f;
-        float networkSection = avail.y * 0.19f;
-
-        // printf("%.2f %2.f\n", avail.x, spacing);
+        float idSection = avail.y * 0.35f;
+        float taskSection = avail.y * 0.20f;
+        float networkSection = avail.y * 0.22f;
 
         DrawHeaderSection(avail.x, idSection);
         DrawMemorySection(avail.x, idSection);
