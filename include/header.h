@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <vector>
+#include <string>
 #include <iostream>
 #include <cmath>
 // lib to read from file

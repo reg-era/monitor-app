@@ -1,28 +1,5 @@
-#include "../../include/graphic_ui.h"
-#include <iostream>
-#include <vector>
-struct TableTask
-{
-    struct Task
-    {
-        string pid;
-        string name;
-        string state;
-        string cpu_usage;
-        string mem_usage;
-
-        Task(string _pid, string _name, string _state, string _cpu_usage, string _mem_usage)
-            : pid(string(_pid)), name(_name), state(_state), cpu_usage(_cpu_usage), mem_usage(_mem_usage) {}
-    };
-
-    std::vector<Task> tasks;
-    string search;
-
-    void update_info()
-    {
-        // tasks.push_back(Task("122", "name", "one", "10", "20"));
-    }
-};
+#include "../../include/header.h"
+#include "../../include/models/task_info.h"
 
 void DrawTaskSection(float width, float height)
 {

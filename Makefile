@@ -10,7 +10,7 @@ SDL2_LIBS := $(shell sdl2-config --libs)
 OPENGL_LIBS := -lGL
 
 # Include directories
-INCLUDES = -Iimgui/lib -Iimgui/lib/backend -Iimgui/lib/gl3w -I/usr/include/SDL2
+INCLUDES = -Iinclude -Iimgui/lib -Iimgui/lib/backend -Iimgui/lib/gl3w -I/usr/include/SDL2
 
 # Source files
 SRC = src/main.cpp \
