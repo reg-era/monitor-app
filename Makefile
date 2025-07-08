@@ -14,7 +14,7 @@ INCLUDES = -Iimgui/lib -Iimgui/lib/backend -Iimgui/lib/gl3w -I/usr/include/SDL2
 
 # Source files
 SRC = src/main.cpp \
-      src/gui/all_gui.cpp \
+      src/gui/mem_sec.cpp  src/gui/net_sec.cpp  src/gui/sys_sec.cpp  src/gui/task_sec.cpp  src/gui/therm_sec.cpp \
       imgui/lib/imgui.cpp \
       imgui/lib/imgui_draw.cpp \
       imgui/lib/imgui_widgets.cpp \
