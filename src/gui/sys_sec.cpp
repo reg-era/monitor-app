@@ -4,7 +4,7 @@ using namespace std;
 struct SysInfo
 {
     string os_name;
-    string cmp_name;
+    string host_name;
     string usr_name;
     string cpu_name;
     int tasks;
@@ -12,7 +12,7 @@ struct SysInfo
     SysInfo()
     {
         os_name = "Linux";
-        cmp_name = "Lenovo";
+        host_name = "129.0.0.1";
         usr_name = "Regera";
         cpu_name = "i5 Wiw";
         tasks = 3;
@@ -37,7 +37,7 @@ void DrawHeaderSection(float width, float height)
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + spacing * 2);
     ImGui::Text("Operating system: %s", sys_info.os_name.c_str());
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + spacing * 2);
-    ImGui::Text("Computer name: %s", sys_info.cmp_name.c_str());
+    ImGui::Text("Host name: %s", sys_info.host_name.c_str());
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + spacing * 2);
     ImGui::Text("User logged: %s", sys_info.usr_name.c_str());
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + spacing * 2);

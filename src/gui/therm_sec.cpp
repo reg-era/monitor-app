@@ -60,25 +60,32 @@ void DrawThermalSection(float width, float height)
         thermal_info.update_info();
     }
     ImGui::Checkbox("Animation", &animation);
-    const char *options[] = {"cpu", "Fan", "Thermal"};
-    ImGui::Combo("Select Data", &thermal_info.option, options, IM_ARRAYSIZE(options));
-
     ImGui::SliderInt("FPS", &thermal_info.fps, 0, 100, "fps %d");
     ImGui::SliderInt("Scale", &thermal_info.scale, 0, 100, "scale %d");
-    ImGui::PopStyleVar();
 
-    switch (thermal_info.option)
+    if (ImGui::BeginTabBar("ThermalTabs"))
     {
-    case 0:
-        ImGui::PlotLines("cpu", thermal_info.cpu_diag, IM_ARRAYSIZE(thermal_info.cpu_diag), 0, "CPU usage", -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
-        break;
-    case 1:
-        ImGui::PlotLines("thermal", thermal_info.tem_diag, IM_ARRAYSIZE(thermal_info.tem_diag), 0, "Thermal temperature", -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
-        break;
-    case 2:
-        ImGui::PlotLines("fan", thermal_info.fan_diag, IM_ARRAYSIZE(thermal_info.fan_diag), 0, "Fans Rolling", -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
-        break;
+        if (ImGui::BeginTabItem("CPU"))
+        {
+            ImGui::PlotLines("", thermal_info.cpu_diag, IM_ARRAYSIZE(thermal_info.cpu_diag), 0, "CPU usage", -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
+            ImGui::EndTabItem();
+        }
+
+        if (ImGui::BeginTabItem("Thermal"))
+        {
+            ImGui::PlotLines("", thermal_info.tem_diag, IM_ARRAYSIZE(thermal_info.tem_diag), 0, "Thermal temperature", -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
+            ImGui::EndTabItem();
+        }
+
+        if (ImGui::BeginTabItem("Fan"))
+        {
+            ImGui::PlotLines("", thermal_info.fan_diag, IM_ARRAYSIZE(thermal_info.fan_diag), 0, "Fan Speed", -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
+            ImGui::EndTabItem();
+        }
+
+        ImGui::EndTabBar();
     }
 
+    ImGui::PopStyleVar();
     ImGui::EndChild();
 }

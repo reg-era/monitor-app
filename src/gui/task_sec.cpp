@@ -1,7 +1,34 @@
 #include "../../include/graphic_ui.h"
+#include <iostream>
+#include <vector>
+struct TableTask
+{
+    struct Task
+    {
+        string pid;
+        string name;
+        string state;
+        string cpu_usage;
+        string mem_usage;
+
+        Task(string _pid, string _name, string _state, string _cpu_usage, string _mem_usage)
+            : pid(string(_pid)), name(_name), state(_state), cpu_usage(_cpu_usage), mem_usage(_mem_usage) {}
+    };
+
+    std::vector<Task> tasks;
+    string search;
+
+    void update_info()
+    {
+        // tasks.push_back(Task("122", "name", "one", "10", "20"));
+    }
+};
 
 void DrawTaskSection(float width, float height)
 {
+    static TableTask table_task;
+    table_task.update_info();
+
     float spacing = ImGui::GetStyle().ItemSpacing.y;
 
     ImGui::BeginChild("Middle", ImVec2(width, height), true);
@@ -24,41 +51,20 @@ void DrawTaskSection(float width, float height)
 
         ImGui::TableHeadersRow();
 
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0);
-        ImGui::Text("1");
-        ImGui::TableSetColumnIndex(1);
-        ImGui::Text("monitor");
-        ImGui::TableSetColumnIndex(2);
-        ImGui::Text("done");
-        ImGui::TableSetColumnIndex(3);
-        ImGui::Text("20");
-        ImGui::TableSetColumnIndex(4);
-        ImGui::Text("10");
-
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0);
-        ImGui::Text("2");
-        ImGui::TableSetColumnIndex(1);
-        ImGui::Text("ascii art");
-        ImGui::TableSetColumnIndex(2);
-        ImGui::Text("done");
-        ImGui::TableSetColumnIndex(3);
-        ImGui::Text("20");
-        ImGui::TableSetColumnIndex(4);
-        ImGui::Text("10");
-
-        ImGui::TableNextRow();
-        ImGui::TableSetColumnIndex(0);
-        ImGui::Text("3");
-        ImGui::TableSetColumnIndex(1);
-        ImGui::Text("kernel");
-        ImGui::TableSetColumnIndex(2);
-        ImGui::Text("done");
-        ImGui::TableSetColumnIndex(3);
-        ImGui::Text("20");
-        ImGui::TableSetColumnIndex(4);
-        ImGui::Text("10");
+        for (int i = 0; i < int(table_task.tasks.size()); i++)
+        {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text(table_task.tasks[i].pid.c_str());
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text(table_task.tasks[i].name.c_str());
+            ImGui::TableSetColumnIndex(2);
+            ImGui::Text(table_task.tasks[i].state.c_str());
+            ImGui::TableSetColumnIndex(3);
+            ImGui::Text(table_task.tasks[i].cpu_usage.c_str());
+            ImGui::TableSetColumnIndex(4);
+            ImGui::Text(table_task.tasks[i].mem_usage.c_str());
+        }
 
         ImGui::EndTable();
     }
