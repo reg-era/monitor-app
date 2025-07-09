@@ -11,12 +11,15 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 // lib to read from file
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 // for the name of the computer and the logged in user
 #include <unistd.h>
 #include <limits.h>
+#include <pwd.h>
 // this is for us to get the cpu information
 // mostly in unix system
 // not sure if it will work in windows
