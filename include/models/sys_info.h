@@ -25,7 +25,6 @@ struct SysInfo
                 if (start != std::string::npos && end != std::string::npos && end > start)
                 {
                     os_name = line.substr(start + 1, end - start - 1);
-                    printf("%s", line.substr(start + 1, end - start - 1));
                 }
                 break;
             }

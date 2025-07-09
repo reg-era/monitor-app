@@ -10,7 +10,7 @@ SDL2_LIBS := $(shell sdl2-config --libs)
 OPENGL_LIBS := -lGL
 
 # Include directories
-INCLUDES = -Iinclude -Iimgui/lib -Iimgui/lib/backend -Iimgui/lib/gl3w -I/usr/include/SDL2
+INCLUDES = -Iinclude -Iinclude/models -Iimgui/lib -Iimgui/lib/backend -Iimgui/lib/gl3w -I/usr/include/SDL2
 
 # Source files
 SRC = src/main.cpp \
@@ -29,8 +29,6 @@ TARGET = bin/monitor-app
 # Ensure build and bin directories exist
 BUILD_DIR = build
 BIN_DIR = bin
-
-.PHONY: all clean run
 
 # Default target
 all: $(TARGET)
@@ -57,3 +55,6 @@ run: $(TARGET)
 # Clean up generated files
 clean:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
+
+
+.PHONY: all clean run
