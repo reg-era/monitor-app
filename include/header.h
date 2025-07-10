@@ -39,6 +39,14 @@
 #include <map>
 #include <cstdlib> 
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <filesystem>
+#include <cctype>
+#include <unordered_set>
+
 using namespace std;
 
 #endif

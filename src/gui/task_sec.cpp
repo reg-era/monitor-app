@@ -12,10 +12,11 @@ void DrawTaskSection(float width, float height)
     ImGui::TextColored(ImVec4(0, 0, 200, 1), "Task Process Information");
 
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + spacing * 2);
-    static char searchText[128] = "";
     ImGui::Text("Search (PID or name)");
     ImGui::SameLine();
-    ImGui::InputText("", searchText, IM_ARRAYSIZE(searchText));
+
+    char search_buffer[128] = {};
+    ImGui::InputText("Search", search_buffer, sizeof(search_buffer));
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + spacing * 2);
 
     if (ImGui::BeginTable("Table Example", 5, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
@@ -30,17 +31,23 @@ void DrawTaskSection(float width, float height)
 
         for (int i = 0; i < int(table_task.tasks.size()); i++)
         {
-            ImGui::TableNextRow();
-            ImGui::TableSetColumnIndex(0);
-            ImGui::Text(table_task.tasks[i].pid.c_str());
-            ImGui::TableSetColumnIndex(1);
-            ImGui::Text(table_task.tasks[i].name.c_str());
-            ImGui::TableSetColumnIndex(2);
-            ImGui::Text(table_task.tasks[i].state.c_str());
-            ImGui::TableSetColumnIndex(3);
-            ImGui::Text(table_task.tasks[i].cpu_usage.c_str());
-            ImGui::TableSetColumnIndex(4);
-            ImGui::Text(table_task.tasks[i].mem_usage.c_str());
+            string keyword = string(search_buffer);
+            if (keyword.empty() ||
+                table_task.tasks[i].pid.rfind(keyword, 0) == 0 ||
+                table_task.tasks[i].name.rfind(keyword, 0) == 0)
+            {
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
+                ImGui::Text(table_task.tasks[i].pid.c_str());
+                ImGui::TableSetColumnIndex(1);
+                ImGui::Text(table_task.tasks[i].name.c_str());
+                ImGui::TableSetColumnIndex(2);
+                ImGui::Text(table_task.tasks[i].state.c_str());
+                ImGui::TableSetColumnIndex(3);
+                ImGui::Text("%.2f", table_task.tasks[i].cpu_usage);
+                ImGui::TableSetColumnIndex(4);
+                ImGui::Text("%.2f", table_task.tasks[i].mem_usage);
+            }
         }
 
         ImGui::EndTable();
