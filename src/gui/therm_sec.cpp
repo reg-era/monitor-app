@@ -16,7 +16,8 @@ void DrawThermalSection(float width, float height)
     static bool animation = true;
     if (animation)
     {
-        thermal_info.update_info();
+        float delta_time = ImGui::GetIO().DeltaTime;
+        thermal_info.update_info(delta_time);
     }
     ImGui::Checkbox("Animation", &animation);
     ImGui::SliderInt("FPS", &thermal_info.fps, 0, 100, "fps %d");
@@ -26,18 +27,21 @@ void DrawThermalSection(float width, float height)
     {
         if (ImGui::BeginTabItem("CPU"))
         {
-            ImGui::PlotLines("", thermal_info.cpu_diag, IM_ARRAYSIZE(thermal_info.cpu_diag), 0, "CPU usage", -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
+            thermal_info.option = 0;
+            ImGui::PlotLines("", thermal_info.cpu_diag, IM_ARRAYSIZE(thermal_info.cpu_diag), 0, "CPU usage", 0.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
             ImGui::EndTabItem();
         }
 
         if (ImGui::BeginTabItem("Thermal"))
         {
+            thermal_info.option = 1;
             ImGui::PlotLines("", thermal_info.tem_diag, IM_ARRAYSIZE(thermal_info.tem_diag), 0, "Thermal temperature", -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
             ImGui::EndTabItem();
         }
 
         if (ImGui::BeginTabItem("Fan"))
         {
+            thermal_info.option = 2;
             ImGui::PlotLines("", thermal_info.fan_diag, IM_ARRAYSIZE(thermal_info.fan_diag), 0, "Fan Speed", -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
             ImGui::EndTabItem();
         }
