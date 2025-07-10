@@ -127,8 +127,8 @@ int main(int, char **)
         ImVec2 avail = ImGui::GetContentRegionAvail();
 
         float idSection = avail.y * 0.35f;
-        float taskSection = avail.y * 0.20f;
-        float networkSection = avail.y * 0.22f;
+        float taskSection = avail.y * 0.35f;
+        float networkSection = avail.y * 0.15f;
 
         DrawHeaderSection(avail.x, idSection);
         DrawMemorySection(avail.x, idSection);
