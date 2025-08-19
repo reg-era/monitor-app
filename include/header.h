@@ -1,7 +1,7 @@
 // To make sure you don't declare the function more than once by including the header multiple times.
 #ifndef header_H
 #define header_H
-
+#include <csignal>
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"

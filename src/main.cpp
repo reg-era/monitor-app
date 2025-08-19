@@ -26,6 +26,16 @@ using namespace gl;
 #include IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #endif
 
+bool running = true;
+
+void signal_handler(int signal)
+{
+    if (signal == SIGINT)
+    {
+        running = false;
+    }
+}
+
 int main(int, char **)
 {
     // Initialize SDL
@@ -90,10 +100,9 @@ int main(int, char **)
     ImVec4 clear_color = ImVec4(255.f, 255.f, 255.f, 255.f);
 
     // Main application loop
-    bool done = false;
-    while (!done)
+    SDL_Event event;
+    while (running)
     {
-        SDL_Event event;
         while (SDL_PollEvent(&event))
         {
             ImGui_ImplSDL2_ProcessEvent(&event);
@@ -102,7 +111,7 @@ int main(int, char **)
                  event.window.event == SDL_WINDOWEVENT_CLOSE &&
                  event.window.windowID == SDL_GetWindowID(window)))
             {
-                done = true;
+                running = false;
             }
         }
 
