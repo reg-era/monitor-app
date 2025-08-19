@@ -28,15 +28,12 @@ using namespace gl;
 
 bool running = true;
 
-void signal_handler(int signal)
+void signal_handler(int)
 {
-    if (signal == SIGINT)
-    {
-        running = false;
-    }
+    running = false;
 }
 
-int main(int, char **)
+int main()
 {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
@@ -85,6 +82,8 @@ int main(int, char **)
         fprintf(stderr, "Failed to initialize OpenGL loader!\n");
         return 1;
     }
+
+    std::signal(SIGINT, signal_handler);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();

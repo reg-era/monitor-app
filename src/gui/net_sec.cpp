@@ -121,7 +121,7 @@ struct Network
         }
 
         // 3. Move to vector
-        for (auto &[name, net] : iface_map)
+        for (auto &[_, net] : iface_map)
         {
             interfaces.push_back(net);
         }

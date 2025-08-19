@@ -20,8 +20,8 @@ struct SysInfo
         {
             if (line.find("NAME=") == 0)
             {
-                auto start = line.find("\"");
-                auto end = line.rfind("\"");
+                int start = line.find("\"");
+                int end = line.rfind("\"");
                 if (start != std::string::npos && end != std::string::npos && end > start)
                 {
                     os_name = line.substr(start + 1, end - start - 1);
@@ -44,7 +44,7 @@ struct SysInfo
         {
             if (line.find("model name") == 0)
             {
-                auto pos = line.find(":");
+                int pos = line.find(":");
                 if (pos != std::string::npos)
                 {
                     cpu_name = line.substr(pos + 2);
@@ -59,7 +59,7 @@ struct SysInfo
     void update_info()
     {
         int count = 0;
-        for (const auto &entry : filesystem::directory_iterator("/proc"))
+        for (const filesystem::directory_entry &entry : filesystem::directory_iterator("/proc"))
         {
             std::string name = entry.path().filename();
             if (!name.empty() && std::all_of(name.begin(), name.end(), ::isdigit))
