@@ -29,13 +29,13 @@ void DrawTaskSection(float width, float height)
 
         ImGui::TableHeadersRow();
 
-        static std::vector<bool> selected;
+        static vector<bool> selected;
         if (selected.size() != table_task.tasks.size())
             selected.resize(table_task.tasks.size(), false);
 
         for (int i = 0; i < (int)table_task.tasks.size(); i++)
         {
-            std::string keyword = std::string(search_buffer);
+            string keyword = string(search_buffer);
             if (keyword.empty() ||
                 table_task.tasks[i].pid.rfind(keyword, 0) == 0 ||
                 table_task.tasks[i].name.rfind(keyword, 0) == 0)
@@ -57,8 +57,8 @@ void DrawTaskSection(float width, float height)
                         static int last_clicked = -1;
                         if (last_clicked >= 0)
                         {
-                            int a = std::min(last_clicked, i);
-                            int b = std::max(last_clicked, i);
+                            int a = min(last_clicked, i);
+                            int b = max(last_clicked, i);
                             for (int j = a; j <= b; j++)
                                 selected[j] = true;
                         }
@@ -66,7 +66,7 @@ void DrawTaskSection(float width, float height)
                     }
                     else
                     {
-                        std::fill(selected.begin(), selected.end(), false);
+                        fill(selected.begin(), selected.end(), false);
                         selected[i] = true;
                     }
                 }

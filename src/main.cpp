@@ -1,5 +1,3 @@
-#include <SDL2/SDL.h>
-
 #include "../../include/header.h"
 #include "../../include/graphic_ui.h"
 
@@ -83,7 +81,7 @@ int main()
         return 1;
     }
 
-    std::signal(SIGINT, signal_handler);
+    signal(SIGINT, signal_handler);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();

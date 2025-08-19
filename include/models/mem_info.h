@@ -1,7 +1,4 @@
 #include "../header.h"
-#include <fstream>
-#include <sstream>
-#include <string>
 
 #ifndef MEM_INFO_H
 #define MEM_INFO_H
@@ -28,14 +25,14 @@ struct MemInfo
 
     void update_info()
     {
-        std::string key;
+        string key;
         unsigned long value;
-        std::ifstream file("/proc/meminfo");
-        std::string line;
+        ifstream file("/proc/meminfo");
+        string line;
 
-        while (std::getline(file, line))
+        while (getline(file, line))
         {
-            std::istringstream ss(line);
+            istringstream ss(line);
             ss >> key >> value;
 
             if (key == "MemTotal:")
@@ -67,7 +64,7 @@ struct MemInfo
         DIR *dir = opendir("/sys/block");
         if (dir == nullptr)
         {
-            std::cerr << "Failed to open /sys/block" << std::endl;
+            cerr << "Failed to open /sys/block" << endl;
             return;
         }
 
@@ -77,10 +74,10 @@ struct MemInfo
         // Iterate through all devices in /sys/block
         while ((entry = readdir(dir)) != nullptr)
         {
-            std::string device = "/dev/" + std::string(entry->d_name);
+            string device = "/dev/" + string(entry->d_name);
 
             // Skip non-disk entries like "loop", "ram" devices, etc.
-            if (device.find("loop") != std::string::npos || device.find("ram") != std::string::npos)
+            if (device.find("loop") != string::npos || device.find("ram") != string::npos)
             {
                 continue;
             }
@@ -88,7 +85,7 @@ struct MemInfo
             struct statvfs buf;
             if (statvfs(device.c_str(), &buf) != 0)
             {
-                std::cerr << "Failed to get stats for device: " << device << std::endl;
+                cerr << "Failed to get stats for device: " << device << endl;
                 return;
             }
 
@@ -104,6 +101,23 @@ struct MemInfo
         disk_cap = disk_tot;
         disk_usag = disk_usg;
         closedir(dir);
+    }
+
+    static string format_size(float cap)
+    {
+        const char *units[] = {"KB", "MB", "GB", "TB"};
+        int unit_index = 0;
+
+        while (cap >= 1024.0f && unit_index < 3)
+        {
+            cap /= 1024.0f;
+            unit_index++;
+        }
+
+        ostringstream formatted_size;
+        formatted_size << fixed << setprecision(2) << cap << " " << units[unit_index];
+
+        return formatted_size.str();
     }
 };
 

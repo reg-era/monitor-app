@@ -21,16 +21,16 @@ struct TableTask
 
     void update_info()
     {
-        std::unordered_set<std::string> current_pids;
+        unordered_set<string> current_pids;
 
-        for (const std::filesystem::directory_entry &entry : filesystem::directory_iterator("/proc"))
+        for (const filesystem::directory_entry &entry : filesystem::directory_iterator("/proc"))
         {
-            std::string pid = entry.path().filename();
-            if (!pid.empty() && std::all_of(pid.begin(), pid.end(), ::isdigit))
+            string pid = entry.path().filename();
+            if (!pid.empty() && all_of(pid.begin(), pid.end(), ::isdigit))
             {
                 current_pids.insert(pid);
-                std::vector<TableTask::Task>::iterator it =
-                    std::find_if(
+                vector<TableTask::Task>::iterator it =
+                    find_if(
                         tasks.begin(),
                         tasks.end(),
                         [&](const Task &t)
@@ -52,7 +52,7 @@ struct TableTask
         }
 
         // Remove tasks that no longer exist
-        tasks.erase(std::remove_if(
+        tasks.erase(remove_if(
                         tasks.begin(),
                         tasks.end(),
                         [&](const Task &t)
@@ -60,20 +60,20 @@ struct TableTask
                     tasks.end());
     }
 
-    Task read_pid(const std::string &pid)
+    Task read_pid(const string &pid)
     {
-        std::string name, state;
+        string name, state;
         float cpu_usage = 0.0f, mem_usage = 0.0f;
 
         // Read /proc/[pid]/stat once
-        std::ifstream stat_file("/proc/" + pid + "/stat");
+        ifstream stat_file("/proc/" + pid + "/stat");
         if (stat_file)
         {
-            std::string line;
-            std::getline(stat_file, line);
-            std::istringstream iss(line);
-            std::string field;
-            std::vector<std::string> fields;
+            string line;
+            getline(stat_file, line);
+            istringstream iss(line);
+            string field;
+            vector<string> fields;
 
             while (iss >> field)
                 fields.push_back(field);
@@ -82,8 +82,8 @@ struct TableTask
             {
                 name = fields[1]; // Might still contain parentheses
                 state = fields[2];
-                float utime = std::stof(fields[13]);
-                float stime = std::stof(fields[14]);
+                float utime = stof(fields[13]);
+                float stime = stof(fields[14]);
                 cpu_usage = utime + stime; // Just a raw tick count
             }
         }
@@ -93,13 +93,13 @@ struct TableTask
             name = name.substr(1, name.size() - 2);
 
         // Read memory usage from /status
-        std::ifstream status_file("/proc/" + pid + "/status");
-        std::string line;
-        while (std::getline(status_file, line))
+        ifstream status_file("/proc/" + pid + "/status");
+        string line;
+        while (getline(status_file, line))
         {
             if (line.find("VmRSS:") == 0)
             {
-                std::istringstream iss(line.substr(6));
+                istringstream iss(line.substr(6));
                 float mem_kb;
                 iss >> mem_kb;
                 mem_usage = mem_kb / 1024.0f;
@@ -113,10 +113,10 @@ struct TableTask
     int count_tasks()
     {
         int count = 0;
-        for (const std::filesystem::directory_entry &entry : filesystem::directory_iterator("/proc"))
+        for (const filesystem::directory_entry &entry : filesystem::directory_iterator("/proc"))
         {
-            std::string name = entry.path().filename();
-            if (!name.empty() && std::all_of(name.begin(), name.end(), ::isdigit))
+            string name = entry.path().filename();
+            if (!name.empty() && all_of(name.begin(), name.end(), ::isdigit))
             {
                 count++;
             }

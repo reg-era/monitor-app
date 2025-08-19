@@ -68,18 +68,18 @@ struct ThermalInfo
     float get_temperature()
     {
         // Try thermal_zone files
-        for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator("/sys/class/thermal"))
+        for (const filesystem::directory_entry &entry : filesystem::directory_iterator("/sys/class/thermal"))
         {
-            const std::filesystem::path &path = entry.path();
-            if (path.filename().string().find("thermal_zone") != std::string::npos)
+            const filesystem::path &path = entry.path();
+            if (path.filename().string().find("thermal_zone") != string::npos)
             {
-                std::ifstream type_file(path / "type");
-                std::string type;
+                ifstream type_file(path / "type");
+                string type;
                 if (type_file >> type)
                 {
-                    if (type.find("x86_pkg_temp") != std::string::npos)
+                    if (type.find("x86_pkg_temp") != string::npos)
                     {
-                        std::ifstream temp_file(path / "temp");
+                        ifstream temp_file(path / "temp");
                         int millidegree;
                         if (temp_file >> millidegree)
                         {
@@ -96,8 +96,8 @@ struct ThermalInfo
     {
         static long prev_idle = 0, prev_total = 0;
 
-        std::ifstream stat("/proc/stat");
-        std::string cpu;
+        ifstream stat("/proc/stat");
+        string cpu;
         long user, nice, system, idle, iowait, irq, softirq;
 
         stat >> cpu >> user >> nice >> system >> idle >> iowait >> irq >> softirq;
@@ -121,12 +121,12 @@ struct ThermalInfo
     {
         if (fans_notfound)
             return 0.0f;
-        for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator("/sys/class/hwmon"))
+        for (const filesystem::directory_entry &entry : filesystem::directory_iterator("/sys/class/hwmon"))
         {
-            const std::filesystem::path &path = entry.path();
+            const filesystem::path &path = entry.path();
             for (int i = 1; i <= 5; ++i)
             {
-                std::ifstream fan_file(path / ("fan" + std::to_string(i) + "_input"));
+                ifstream fan_file(path / ("fan" + to_string(i) + "_input"));
                 int rpm;
                 if (fan_file >> rpm)
                 {

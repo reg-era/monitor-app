@@ -1,132 +1,7 @@
 #include "../../include/graphic_ui.h"
+#include "../../include/models/net_info.h"
+#include "../../include/models/mem_info.h"
 
-#include <vector>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <ifaddrs.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <cstring>
-#include <unordered_map>
-
-using namespace std;
-
-string format_sec_size(float cap)
-{
-    const char *units[] = {"KB", "MB", "GB", "TB"};
-    int unit_index = 0;
-
-    while (cap >= 1024.0f && unit_index < 3)
-    {
-        cap /= 1024.0f;
-        unit_index++;
-    }
-
-    std::ostringstream formatted_size;
-    formatted_size << std::fixed << std::setprecision(2) << cap << " " << units[unit_index];
-
-    return formatted_size.str();
-}
-class NetInter
-{
-public:
-    struct RX
-    {
-        string bytes;
-        string packets;
-        string errs;
-        string drop;
-        string fifo;
-        string frame;
-        string compressed;
-        string multicast;
-    };
-
-    struct TX
-    {
-        string bytes;
-        string packets;
-        string errs;
-        string drop;
-        string fifo;
-        string colls;
-        string carrier;
-        string compressed;
-    };
-
-    string name;
-    string ipv4;
-    RX reveive;
-    TX transfer;
-};
-
-struct Network
-{
-    vector<NetInter> interfaces;
-
-    void update()
-    {
-        interfaces.clear();
-        unordered_map<string, NetInter> iface_map;
-
-        // 1. Read /proc/net/dev for RX/TX stats
-        ifstream dev("/proc/net/dev");
-        string line;
-        // Skip the first 2 header lines
-        getline(dev, line);
-        getline(dev, line);
-
-        while (getline(dev, line))
-        {
-            istringstream ss(line);
-            string iface;
-            getline(ss, iface, ':'); // Get the interface name
-
-            // Trim whitespace
-            iface.erase(0, iface.find_first_not_of(" \t"));
-            iface.erase(iface.find_last_not_of(" \t") + 1);
-
-            NetInter net;
-            net.name = iface;
-
-            // Read RX and TX stats
-            ss >> net.reveive.bytes >> net.reveive.packets >> net.reveive.errs >> net.reveive.drop >> net.reveive.fifo >> net.reveive.frame >> net.reveive.compressed >> net.reveive.multicast >> net.transfer.bytes >> net.transfer.packets >> net.transfer.errs >> net.transfer.drop >> net.transfer.fifo >> net.transfer.colls >> net.transfer.carrier >> net.transfer.compressed;
-
-            iface_map[iface] = net;
-        }
-
-        // 2. Get IPv4 using getifaddrs
-        struct ifaddrs *ifaddr;
-        if (getifaddrs(&ifaddr) == 0)
-        {
-            for (struct ifaddrs *ifa = ifaddr; ifa != nullptr; ifa = ifa->ifa_next)
-            {
-                if (!ifa->ifa_addr || ifa->ifa_addr->sa_family != AF_INET)
-                    continue;
-
-                string name = ifa->ifa_name;
-                char ip[INET_ADDRSTRLEN];
-                void *addr = &((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
-
-                inet_ntop(AF_INET, addr, ip, INET_ADDRSTRLEN);
-
-                if (iface_map.count(name))
-                {
-                    iface_map[name].ipv4 = ip;
-                }
-            }
-            freeifaddrs(ifaddr);
-        }
-
-        // 3. Move to vector
-        for (auto &[_, net] : iface_map)
-        {
-            interfaces.push_back(net);
-        }
-    }
-};
 
 void DrawNetworkSection(float width, float height)
 {
@@ -151,7 +26,7 @@ void DrawNetworkSection(float width, float height)
                 ImGui::SameLine();
                 float rx_bytes = float(atoi(net.interfaces[i].reveive.bytes.c_str()));
                 float rx_per = rx_bytes / (1024.0f * 1024.0f * 1024.0f);
-                ImGui::ProgressBar(rx_per, ImVec2(width * 0.35f, 20), format_sec_size(rx_bytes / 1024.0f).c_str());
+                ImGui::ProgressBar(rx_per, ImVec2(width * 0.35f, 20), MemInfo::format_size(rx_bytes / 1024.0f).c_str());
                 ImGui::SameLine();
                 ImGui::Text("2gb");
 
@@ -162,7 +37,7 @@ void DrawNetworkSection(float width, float height)
                 ImGui::SameLine();
                 float tx_bytes = float(atoi(net.interfaces[i].transfer.bytes.c_str()));
                 float tx_per = tx_bytes / (1024.0f * 1024.0f * 1024.0f);
-                ImGui::ProgressBar(tx_per, ImVec2(width * 0.35f, 20), format_sec_size(tx_bytes / 1024.0f).c_str());
+                ImGui::ProgressBar(tx_per, ImVec2(width * 0.35f, 20), MemInfo::format_size(tx_bytes / 1024.0f).c_str());
                 ImGui::SameLine();
                 ImGui::Text("2gb");
 
