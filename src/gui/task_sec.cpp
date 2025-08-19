@@ -15,7 +15,7 @@ void DrawTaskSection(float width, float height)
     ImGui::Text("Search (PID or name)");
     ImGui::SameLine();
 
-    char search_buffer[128] = {};
+    static char search_buffer[128] = {};
     ImGui::InputText("Search", search_buffer, sizeof(search_buffer));
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + spacing * 2);
 
@@ -29,22 +29,57 @@ void DrawTaskSection(float width, float height)
 
         ImGui::TableHeadersRow();
 
-        for (int i = 0; i < int(table_task.tasks.size()); i++)
+        static std::vector<bool> selected;
+        if (selected.size() != table_task.tasks.size())
+            selected.resize(table_task.tasks.size(), false);
+
+        for (int i = 0; i < (int)table_task.tasks.size(); i++)
         {
-            string keyword = string(search_buffer);
+            std::string keyword = std::string(search_buffer);
             if (keyword.empty() ||
                 table_task.tasks[i].pid.rfind(keyword, 0) == 0 ||
                 table_task.tasks[i].name.rfind(keyword, 0) == 0)
             {
                 ImGui::TableNextRow();
+
                 ImGui::TableSetColumnIndex(0);
-                ImGui::Text(table_task.tasks[i].pid.c_str());
+
+                bool is_selected = selected[i];
+
+                if (ImGui::Selectable(table_task.tasks[i].pid.c_str(), is_selected, ImGuiSelectableFlags_SpanAllColumns))
+                {
+                    if (ImGui::GetIO().KeyCtrl)
+                    {
+                        selected[i] = !selected[i];
+                    }
+                    else if (ImGui::GetIO().KeyShift)
+                    {
+                        static int last_clicked = -1;
+                        if (last_clicked >= 0)
+                        {
+                            int a = std::min(last_clicked, i);
+                            int b = std::max(last_clicked, i);
+                            for (int j = a; j <= b; j++)
+                                selected[j] = true;
+                        }
+                        last_clicked = i;
+                    }
+                    else
+                    {
+                        std::fill(selected.begin(), selected.end(), false);
+                        selected[i] = true;
+                    }
+                }
+
                 ImGui::TableSetColumnIndex(1);
-                ImGui::Text(table_task.tasks[i].name.c_str());
+                ImGui::TextUnformatted(table_task.tasks[i].name.c_str());
+
                 ImGui::TableSetColumnIndex(2);
-                ImGui::Text(table_task.tasks[i].state.c_str());
+                ImGui::TextUnformatted(table_task.tasks[i].state.c_str());
+
                 ImGui::TableSetColumnIndex(3);
                 ImGui::Text("%.2f", table_task.tasks[i].cpu_usage);
+
                 ImGui::TableSetColumnIndex(4);
                 ImGui::Text("%.2f", table_task.tasks[i].mem_usage);
             }
@@ -52,5 +87,6 @@ void DrawTaskSection(float width, float height)
 
         ImGui::EndTable();
     }
+
     ImGui::EndChild();
 }

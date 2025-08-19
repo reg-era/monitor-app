@@ -13,6 +13,7 @@ struct ThermalInfo
     float tem_diag[90];
     int fan_count;
     float fan_diag[90];
+    bool fans_notfound = false;
 
     float update_interval = 0.01f; // seconds per update at 100 fps (1/100)
     float time_accumulator = 0.0f;
@@ -41,13 +42,15 @@ struct ThermalInfo
             switch (option)
             {
             case 0:
-                shift_and_append(cpu_diag, get_cpu_usage());
+                shift_and_append(cpu_diag, get_cpu_usage() + scale / 100.0f);
                 break;
             case 1:
-                shift_and_append(tem_diag, get_temperature() / 100.0f);
+                shift_and_append(tem_diag, (get_temperature() + scale - 100) / 100.0f);
                 break;
             case 2:
-                shift_and_append(fan_diag, get_fan_speed());
+                float fanspeed = get_fan_speed();
+                if (!fans_notfound)
+                    shift_and_append(fan_diag, fanspeed + scale / 100.0f);
                 break;
             }
         }
@@ -65,9 +68,9 @@ struct ThermalInfo
     float get_temperature()
     {
         // Try thermal_zone files
-        for (const auto &entry : std::filesystem::directory_iterator("/sys/class/thermal"))
+        for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator("/sys/class/thermal"))
         {
-            const auto &path = entry.path();
+            const std::filesystem::path &path = entry.path();
             if (path.filename().string().find("thermal_zone") != std::string::npos)
             {
                 std::ifstream type_file(path / "type");
@@ -116,17 +119,11 @@ struct ThermalInfo
 
     float get_fan_speed()
     {
-        // Try hwmon files
-        for (const auto &entry : std::filesystem::directory_iterator("/sys/class/hwmon"))
+        if (fans_notfound)
+            return 0.0f;
+        for (const std::filesystem::directory_entry &entry : std::filesystem::directory_iterator("/sys/class/hwmon"))
         {
-            const auto &path = entry.path();
-            std::ifstream name_file(path / "name");
-            std::string name;
-            if (name_file >> name)
-            {
-                // Optional: filter based on device name
-            }
-
+            const std::filesystem::path &path = entry.path();
             for (int i = 1; i <= 5; ++i)
             {
                 std::ifstream fan_file(path / ("fan" + std::to_string(i) + "_input"));
@@ -138,7 +135,8 @@ struct ThermalInfo
                 }
             }
         }
-        return 0.0f; // Fan not active or not found
+        fans_notfound = true;
+        return 0.0f;
     }
 };
 

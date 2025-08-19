@@ -28,21 +28,28 @@ void DrawThermalSection(float width, float height)
         if (ImGui::BeginTabItem("CPU"))
         {
             thermal_info.option = 0;
-            ImGui::PlotLines("", thermal_info.cpu_diag, IM_ARRAYSIZE(thermal_info.cpu_diag), 0, "CPU usage", 0.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
+            string label = "CPU usage " + to_string(int(thermal_info.get_cpu_usage())) + "%";
+            ImGui::PlotLines("", thermal_info.cpu_diag, IM_ARRAYSIZE(thermal_info.cpu_diag), 0, label.c_str(), 0.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
             ImGui::EndTabItem();
         }
 
         if (ImGui::BeginTabItem("Thermal"))
         {
             thermal_info.option = 1;
-            ImGui::PlotLines("", thermal_info.tem_diag, IM_ARRAYSIZE(thermal_info.tem_diag), 0, "Thermal temperature", -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
+            string label = "Thermal temperature " + to_string(int(thermal_info.get_temperature())) + "C";
+            ImGui::PlotLines("", thermal_info.tem_diag, IM_ARRAYSIZE(thermal_info.tem_diag), 0, label.c_str(), -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
             ImGui::EndTabItem();
         }
 
         if (ImGui::BeginTabItem("Fan"))
         {
             thermal_info.option = 2;
-            ImGui::PlotLines("", thermal_info.fan_diag, IM_ARRAYSIZE(thermal_info.fan_diag), 0, "Fan Speed", -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
+            string label = "Fan speed" + to_string(int(thermal_info.get_fan_speed()));
+            if (thermal_info.fans_notfound)
+            {
+                label = "Motherboard doesn't export the fan RPM";
+            }
+            ImGui::PlotLines("", thermal_info.fan_diag, IM_ARRAYSIZE(thermal_info.fan_diag), 0, label.c_str(), -1.0f, 1.0f, ImVec2(innerWidth - spacing * 6, height / 2));
             ImGui::EndTabItem();
         }
 

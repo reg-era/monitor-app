@@ -23,15 +23,19 @@ struct TableTask
     {
         std::unordered_set<std::string> current_pids;
 
-        for (const auto &entry : filesystem::directory_iterator("/proc"))
+        for (const std::filesystem::directory_entry &entry : filesystem::directory_iterator("/proc"))
         {
             std::string pid = entry.path().filename();
             if (!pid.empty() && std::all_of(pid.begin(), pid.end(), ::isdigit))
             {
                 current_pids.insert(pid);
-                auto it = std::find_if(tasks.begin(), tasks.end(),
-                                       [&](const Task &t)
-                                       { return t.pid == pid; });
+                std::vector<TableTask::Task>::iterator it =
+                    std::find_if(
+                        tasks.begin(),
+                        tasks.end(),
+                        [&](const Task &t)
+                        { return t.pid == pid; });
+
                 if (it == tasks.end())
                 {
                     try
@@ -48,9 +52,11 @@ struct TableTask
         }
 
         // Remove tasks that no longer exist
-        tasks.erase(std::remove_if(tasks.begin(), tasks.end(),
-                                   [&](const Task &t)
-                                   { return current_pids.find(t.pid) == current_pids.end(); }),
+        tasks.erase(std::remove_if(
+                        tasks.begin(),
+                        tasks.end(),
+                        [&](const Task &t)
+                        { return current_pids.find(t.pid) == current_pids.end(); }),
                     tasks.end());
     }
 
@@ -107,7 +113,7 @@ struct TableTask
     int count_tasks()
     {
         int count = 0;
-        for (const auto &entry : filesystem::directory_iterator("/proc"))
+        for (const std::filesystem::directory_entry &entry : filesystem::directory_iterator("/proc"))
         {
             std::string name = entry.path().filename();
             if (!name.empty() && std::all_of(name.begin(), name.end(), ::isdigit))
