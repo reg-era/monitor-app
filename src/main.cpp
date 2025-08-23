@@ -1,9 +1,5 @@
-#include <SDL2/SDL.h>
-
-#include "../../include/prepare.h"
-#include "../../include/cpu.h"
-#include "../../include/memory.h"
-#include "../../include/process.h"
+#include "../../include/header.h"
+#include "../../include/graphic_ui.h"
 
 // OpenGL loader selection
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
@@ -28,7 +24,14 @@ using namespace gl;
 #include IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #endif
 
-int main(int, char **)
+bool running = true;
+
+void signal_handler(int)
+{
+    running = false;
+}
+
+int main()
 {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
@@ -78,6 +81,8 @@ int main(int, char **)
         return 1;
     }
 
+    signal(SIGINT, signal_handler);
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -91,37 +96,54 @@ int main(int, char **)
     // Background color
     ImVec4 clear_color = ImVec4(255.f, 255.f, 255.f, 255.f);
 
-    static CPU cpu(ImGui::GetTime());
-    static Memory memo(ImGui::GetTime());
-    static Process procMonitor;
-
     // Main application loop
-    bool done = false;
-    while (!done)
+    SDL_Event event;
+    while (running)
     {
-        // Poll events
-        SDL_Event event;
         while (SDL_PollEvent(&event))
         {
             ImGui_ImplSDL2_ProcessEvent(&event);
-            if (
-                event.type == SDL_QUIT ||
+            if (event.type == SDL_QUIT ||
                 (event.type == SDL_WINDOWEVENT &&
                  event.window.event == SDL_WINDOWEVENT_CLOSE &&
                  event.window.windowID == SDL_GetWindowID(window)))
             {
-                done = true;
+                running = false;
             }
         }
 
-        // Start a new ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
 
-        SectionWindows(HeaderNavigation(io.DisplaySize), cpu, memo,procMonitor);
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(io.DisplaySize);
+        ImGui::Begin(
+            "Main Window",
+            nullptr,
+            ImGuiWindowFlags_NoTitleBar |
+                ImGuiWindowFlags_NoResize |
+                ImGuiWindowFlags_NoMove |
+                ImGuiWindowFlags_NoCollapse |
+                ImGuiWindowFlags_NoScrollbar |
+                ImGuiWindowFlags_NoScrollWithMouse |
+                ImGuiWindowFlags_NoBringToFrontOnFocus |
+                ImGuiWindowFlags_NoSavedSettings);
 
-        // Render the frame
+        ImVec2 avail = ImGui::GetContentRegionAvail();
+
+        float idSection = avail.y * 0.35f;
+        float taskSection = avail.y * 0.35f;
+        float networkSection = avail.y * 0.15f;
+
+        DrawHeaderSection(avail.x, idSection);
+        DrawMemorySection(avail.x, idSection);
+        DrawTaskSection(avail.x, taskSection);
+        DrawNetworkSection(avail.x, networkSection);
+
+        ImGui::End(); // End Main Window
+
+        // Render
         ImGui::Render();
         glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);

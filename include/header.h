@@ -1,39 +1,44 @@
-// To make sure you don't declare the function more than once by including the header multiple times.
-#ifndef header_H
-#define header_H
+#ifndef HEADER_H
+#define HEADER_H
 
+// ---- External Libraries ----
+#include <SDL2/SDL.h>
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
-#include <stdio.h>
-#include <dirent.h>
-#include <vector>
-#include <iostream>
+
+// ---- Standard C / C++ Libraries ----
+#include <algorithm>
 #include <cmath>
-// lib to read from file
+#include <csignal>
+#include <cctype>
+#include <cstdlib>
+#include <ctime>
 #include <fstream>
+#include <iostream>
+#include <map>
 #include <sstream>
-// for the name of the computer and the logged in user
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <filesystem>
+
+// ---- C system headers (POSIX/Linux specific) ----
+#include <dirent.h>
 #include <unistd.h>
 #include <limits.h>
-// this is for us to get the cpu information
-// mostly in unix system
-// not sure if it will work in windows
+#include <pwd.h>
 #include <cpuid.h>
-// this is for the memory usage and other memory visualization
-// for linux gotta find a way for windows
 #include <sys/types.h>
 #include <sys/sysinfo.h>
 #include <sys/statvfs.h>
-// for time and date
-#include <ctime>
-// ifconfig ip addresses
-#include <sys/types.h>
 #include <ifaddrs.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <map>
+#include <cstring>
 
+// ---- Namespaces ----
 using namespace std;
 
-#endif
+#endif // HEADER_H
