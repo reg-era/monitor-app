@@ -22,7 +22,7 @@ struct SysInfo
             {
                 int start = line.find("\"");
                 int end = line.rfind("\"");
-                if (start != string::npos && end != string::npos && end > start)
+                if (start != 0 && end != 0 && end > start)
                 {
                     os_name = line.substr(start + 1, end - start - 1);
                 }
@@ -45,7 +45,7 @@ struct SysInfo
             if (line.find("model name") == 0)
             {
                 int pos = line.find(":");
-                if (pos != string::npos)
+                if (pos != 0)
                 {
                     cpu_name = line.substr(pos + 2);
                 }

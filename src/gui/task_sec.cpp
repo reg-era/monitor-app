@@ -52,18 +52,6 @@ void DrawTaskSection(float width, float height)
                     {
                         selected[i] = !selected[i];
                     }
-                    else if (ImGui::GetIO().KeyShift)
-                    {
-                        static int last_clicked = -1;
-                        if (last_clicked >= 0)
-                        {
-                            int a = min(last_clicked, i);
-                            int b = max(last_clicked, i);
-                            for (int j = a; j <= b; j++)
-                                selected[j] = true;
-                        }
-                        last_clicked = i;
-                    }
                     else
                     {
                         fill(selected.begin(), selected.end(), false);
