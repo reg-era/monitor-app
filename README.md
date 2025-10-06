@@ -63,7 +63,5 @@ sudo apt install libsdl2-dev g++
 make run
 ```
 
-## 🧑‍💻 Author
-
 Developed as part of a System Monitoring project challenge.
 Feel free to contribute or modify the app to add new features!
