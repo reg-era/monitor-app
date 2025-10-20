@@ -5,6 +5,8 @@
 **Monitoring App** is a desktop system monitor built with **C++** and **Dear ImGui**.  
 It displays real-time system performance metrics — including **CPU**, **RAM**, **SWAP**, **Fan**, **Thermal**, **Disk**, and **Network** usage — using data from the Linux `/proc` and `/sys` filesystems.
 
+![Monitoring App Screenshot](image/Screenshot-System-Monitor.png)
+
 ---
 
 ## 🎯 Objectives
